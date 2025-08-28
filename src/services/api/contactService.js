@@ -3,14 +3,15 @@ import React from "react";
 
 // Initialize ApperClient
 const getApperClient = () => {
-  const { ApperClient } = window.ApperSDK
+  const { ApperClient } = window.ApperSDK;
   return new ApperClient({
     apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
     apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
-  })
-}
-export const contactService = {
-async getAll() {
+  });
+};
+
+const contactService = {
+  async getAll() {
     try {
       const apperClient = getApperClient()
       const params = {
@@ -44,9 +45,9 @@ async getAll() {
       console.error("Error fetching contacts:", error?.response?.data?.message || error)
       return []
     }
-  },
+},
 
-async getById(id) {
+  async getById(id) {
     try {
       const apperClient = getApperClient()
       const params = {
@@ -206,6 +207,8 @@ async getById(id) {
     } catch (error) {
       console.error("Error deleting contact:", error?.response?.data?.message || error)
       return false
-    }
-  }
 }
+  }
+};
+
+export { contactService };
