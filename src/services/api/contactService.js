@@ -11,9 +11,9 @@ const getApperClient = () => {
 };
 
 const contactService = {
-  async getAll() {
+async getAll() {
     try {
-      const apperClient = getApperClient()
+      const apperClient = getApperClient();
       const params = {
         fields: [
           {"field": {"Name": "Name"}},
@@ -30,27 +30,29 @@ const contactService = {
         ],
         orderBy: [{"fieldName": "Id", "sorttype": "DESC"}],
         pagingInfo: {"limit": 100, "offset": 0}
-}
-      
-      const response = await apperClient.fetchRecords('contact_c', params);
-      
+      };
+const response = await apperClient.fetchRecords('contact_c', params);
+
       if (!response.success) {
-        console.error(response.message)
-        toast.error(response.message)
-        return []
+        console.error('Failed to fetch contacts:', response.message);
+        toast.error(`Failed to load contacts: ${response.message}`);
+        return [];
       }
-      
-      return response.data || []
+
+      if (!response.data || response.data.length === 0) {
+        return [];
+      }
+
+      return response.data;
     } catch (error) {
-console.error("Error fetching contacts:", error?.response?.data?.message || error);
-      toast.error("Failed to load contacts");
+      console.error('Error in contactService.getAll:', error?.response?.data?.message || error);
+      toast.error('Failed to load contacts. Please check your connection and try again.');
       return [];
     }
   },
 
   async getById(id) {
     try {
-      const apperClient = getApperClient()
       const params = {
         fields: [
           {"field": {"Name": "Name"}},
@@ -65,25 +67,32 @@ console.error("Error fetching contacts:", error?.response?.data?.message || erro
           {"field": {"Name": "last_activity_c"}},
           {"field": {"Name": "notes_c"}}
         ]
+      };
+
+      const { ApperClient } = window.ApperSDK;
+      const apperClient = new ApperClient({
+        apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
+        apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
+      });
+
+      const response = await apperClient.getRecordById('contact_c', id, params);
+
+      if (!response.success) {
+        console.error(`Failed to fetch contact ${id}:`, response.message);
+        toast.error(`Failed to load contact: ${response.message}`);
+        return null;
       }
-      
-      const response = await apperClient.getRecordById('contact_c', id, params)
-      
-      if (!response?.data) {
-        return null
-      }
-      return response.data
+
+      return response.data;
     } catch (error) {
-      console.error(`Error fetching contact ${id}:`, error?.response?.data?.message || error)
-      return null
+      console.error(`Error in contactService.getById(${id}):`, error?.response?.data?.message || error);
+      toast.error('Failed to load contact details. Please check your connection and try again.');
+      return null;
     }
   },
 
   async create(contactData) {
     try {
-      const apperClient = getApperClient()
-      
-      // Only include Updateable fields
       const params = {
         records: [{
           Name: contactData.Name || `${contactData.first_name_c || ''} ${contactData.last_name_c || ''}`.trim(),
@@ -98,41 +107,52 @@ console.error("Error fetching contacts:", error?.response?.data?.message || erro
           last_activity_c: new Date().toISOString(),
           notes_c: contactData.notes_c || ''
         }]
-      }
-      
-      const response = await apperClient.createRecord('contact_c', params)
-      
+      };
+
+      const { ApperClient } = window.ApperSDK;
+      const apperClient = new ApperClient({
+        apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
+        apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
+      });
+
+      const response = await apperClient.createRecord('contact_c', params);
+
       if (!response.success) {
-        console.error(response.message)
-        toast.error(response.message)
-        return null
+        console.error('Failed to create contact:', response.message);
+        toast.error(`Failed to create contact: ${response.message}`);
+        return null;
       }
-      
+
       if (response.results) {
-        const successful = response.results.filter(r => r.success)
-        const failed = response.results.filter(r => !r.success)
-        
+        const successful = response.results.filter(r => r.success);
+        const failed = response.results.filter(r => !r.success);
+
         if (failed.length > 0) {
-          console.error(`Failed to create ${failed.length} contacts:`, JSON.stringify(failed))
+          console.error(`Failed to create ${failed.length} contacts:`, JSON.stringify(failed));
           failed.forEach(record => {
-            record.errors?.forEach(error => toast.error(`${error.fieldLabel}: ${error}`))
-            if (record.message) toast.error(record.message)
-          })
+            if (record.errors) {
+              record.errors.forEach(error => toast.error(`${error.fieldLabel || 'Field'}: ${error.message || error}`));
+            }
+            if (record.message) toast.error(record.message);
+          });
         }
-        return successful.length > 0 ? successful[0].data : null
+
+        if (successful.length > 0) {
+          toast.success('Contact created successfully');
+          return successful[0].data;
+        }
       }
-      return null
+
+      return null;
     } catch (error) {
-      console.error("Error creating contact:", error?.response?.data?.message || error)
-      return null
+      console.error('Error in contactService.create:', error?.response?.data?.message || error);
+      toast.error('Failed to create contact. Please check your connection and try again.');
+      return null;
     }
   },
 
   async update(id, contactData) {
     try {
-      const apperClient = getApperClient()
-      
-      // Only include Updateable fields
       const params = {
         records: [{
           Id: parseInt(id),
@@ -147,69 +167,99 @@ console.error("Error fetching contacts:", error?.response?.data?.message || erro
           last_activity_c: new Date().toISOString(),
           notes_c: contactData.notes_c || ''
         }]
-      }
-      
-      const response = await apperClient.updateRecord('contact_c', params)
-      
+      };
+
+      const { ApperClient } = window.ApperSDK;
+      const apperClient = new ApperClient({
+        apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
+        apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
+      });
+
+      const response = await apperClient.updateRecord('contact_c', params);
+
       if (!response.success) {
-        console.error(response.message)
-        toast.error(response.message)
-        return null
+        console.error(`Failed to update contact ${id}:`, response.message);
+        toast.error(`Failed to update contact: ${response.message}`);
+        return null;
       }
-      
+
       if (response.results) {
-        const successful = response.results.filter(r => r.success)
-        const failed = response.results.filter(r => !r.success)
-        
+        const successful = response.results.filter(r => r.success);
+        const failed = response.results.filter(r => !r.success);
+
         if (failed.length > 0) {
-          console.error(`Failed to update ${failed.length} contacts:`, JSON.stringify(failed))
+          console.error(`Failed to update ${failed.length} contacts:`, JSON.stringify(failed));
           failed.forEach(record => {
-            record.errors?.forEach(error => toast.error(`${error.fieldLabel}: ${error}`))
-            if (record.message) toast.error(record.message)
-          })
+            if (record.errors) {
+              record.errors.forEach(error => toast.error(`${error.fieldLabel || 'Field'}: ${error.message || error}`));
+            }
+            if (record.message) toast.error(record.message);
+          });
         }
-        return successful.length > 0 ? successful[0].data : null
+
+        if (successful.length > 0) {
+          toast.success('Contact updated successfully');
+          return successful[0].data;
+        }
       }
-      return null
+
+      return null;
     } catch (error) {
-      console.error("Error updating contact:", error?.response?.data?.message || error)
-      return null
+      console.error(`Error in contactService.update(${id}):`, error?.response?.data?.message || error);
+      toast.error('Failed to update contact. Please check your connection and try again.');
+      return null;
     }
   },
 
-  async delete(id) {
+  async delete(recordIds) {
     try {
-      const apperClient = getApperClient()
+      const ids = Array.isArray(recordIds) ? recordIds : [recordIds];
       const params = { 
-        RecordIds: [parseInt(id)]
-      }
-      
-      const response = await apperClient.deleteRecord('contact_c', params)
-      
+        RecordIds: ids.map(id => parseInt(id))
+      };
+
+      const { ApperClient } = window.ApperSDK;
+      const apperClient = new ApperClient({
+        apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
+        apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
+      });
+
+      const response = await apperClient.deleteRecord('contact_c', params);
+
       if (!response.success) {
-        console.error(response.message)
-        toast.error(response.message)
-        return false
+        console.error(`Failed to delete contact(s) ${ids.join(', ')}:`, response.message);
+        toast.error(`Failed to delete contact(s): ${response.message}`);
+        return false;
       }
-      
+
       if (response.results) {
-        const successful = response.results.filter(r => r.success)
-        const failed = response.results.filter(r => !r.success)
-        
+        const successful = response.results.filter(r => r.success);
+        const failed = response.results.filter(r => !r.success);
+
         if (failed.length > 0) {
-          console.error(`Failed to delete ${failed.length} contacts:`, JSON.stringify(failed))
+          console.error(`Failed to delete ${failed.length} contacts:`, JSON.stringify(failed));
           failed.forEach(record => {
-            if (record.message) toast.error(record.message)
-          })
+            if (record.message) toast.error(record.message);
+          });
         }
-        return successful.length > 0
+
+        if (successful.length > 0) {
+          const message = successful.length === 1 ? 'Contact deleted successfully' : `${successful.length} contacts deleted successfully`;
+          toast.success(message);
+          return successful.length === ids.length;
+        }
       }
-      return true
+
+      return false;
     } catch (error) {
-console.error("Error deleting contact:", error?.response?.data?.message || error)
-      return false
+      const ids = Array.isArray(recordIds) ? recordIds : [recordIds];
+      console.error(`Error in contactService.delete(${ids.join(', ')}):`, error?.response?.data?.message || error);
+      toast.error('Failed to delete contact(s). Please check your connection and try again.');
+      return false;
     }
-  }
+}
 };
+
+export { contactService };
 
 export { contactService };
