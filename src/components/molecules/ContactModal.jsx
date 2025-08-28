@@ -6,30 +6,30 @@ import Input from "@/components/atoms/Input"
 import Badge from "@/components/atoms/Badge"
 
 const ContactModal = ({ isOpen, onClose, onSave, contact = null, title = "Add Contact" }) => {
-  const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    phone: "",
-    company: "",
-    jobTitle: "",
-    notes: "",
-    tags: []
+const [formData, setFormData] = useState({
+    first_name_c: "",
+    last_name_c: "",
+    email_c: "",
+    phone_c: "",
+    company_c: "",
+    job_title_c: "",
+    notes_c: "",
+    Tags: ""
   })
   const [newTag, setNewTag] = useState("")
   const [errors, setErrors] = useState({})
 
-  useEffect(() => {
+useEffect(() => {
     if (contact) {
       setFormData({
-        firstName: contact.firstName || "",
-        lastName: contact.lastName || "",
-        email: contact.email || "",
-        phone: contact.phone || "",
-        company: contact.company || "",
-        jobTitle: contact.jobTitle || "",
-        notes: contact.notes || "",
-        tags: contact.tags || []
+        first_name_c: contact.first_name_c || "",
+        last_name_c: contact.last_name_c || "",
+        email_c: contact.email_c || "",
+        phone_c: contact.phone_c || "",
+        company_c: contact.company_c || "",
+        job_title_c: contact.job_title_c || "",
+        notes_c: contact.notes_c || "",
+        Tags: contact.Tags || ""
       })
     } else {
       setFormData({

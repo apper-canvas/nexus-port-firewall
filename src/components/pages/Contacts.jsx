@@ -41,16 +41,20 @@ const Contacts = () => {
     setShowModal(true)
   }
 
-  const handleSaveContact = async (contactData) => {
+const handleSaveContact = async (contactData) => {
     try {
       if (editingContact) {
         const updatedContact = await contactService.update(editingContact.Id, contactData)
-        setContacts(prev => prev.map(c => c.Id === editingContact.Id ? updatedContact : c))
-        toast.success("Contact updated successfully!")
+        if (updatedContact) {
+          setContacts(prev => prev.map(c => c.Id === editingContact.Id ? updatedContact : c))
+          toast.success("Contact updated successfully!")
+        }
       } else {
         const newContact = await contactService.create(contactData)
-        setContacts(prev => [newContact, ...prev])
-        toast.success("Contact created successfully!")
+        if (newContact) {
+          setContacts(prev => [newContact, ...prev])
+          toast.success("Contact created successfully!")
+        }
       }
       setShowModal(false)
       setEditingContact(null)
@@ -59,20 +63,22 @@ const Contacts = () => {
     }
   }
 
-  const handleDeleteContact = async (contact) => {
-    if (window.confirm(`Are you sure you want to delete ${contact.firstName} ${contact.lastName}?`)) {
+const handleDeleteContact = async (contact) => {
+    if (window.confirm(`Are you sure you want to delete ${contact.first_name_c} ${contact.last_name_c}?`)) {
       try {
-        await contactService.delete(contact.Id)
-        setContacts(prev => prev.filter(c => c.Id !== contact.Id))
-        toast.success("Contact deleted successfully!")
+        const success = await contactService.delete(contact.Id)
+        if (success) {
+          setContacts(prev => prev.filter(c => c.Id !== contact.Id))
+          toast.success("Contact deleted successfully!")
+        }
       } catch (err) {
         toast.error(err.message || "Failed to delete contact")
       }
     }
   }
 
-  const handleViewContact = (contact) => {
-    toast.info(`Viewing ${contact.firstName} ${contact.lastName}`)
+const handleViewContact = (contact) => {
+    toast.info(`Viewing ${contact.first_name_c} ${contact.last_name_c}`)
     // In a real app, this would open a detailed view
   }
 

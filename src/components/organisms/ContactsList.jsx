@@ -19,31 +19,31 @@ const ContactsList = ({
   const [sortBy, setSortBy] = useState("name")
   const [filterBy, setFilterBy] = useState("all")
 
-  const filteredContacts = contacts.filter(contact => {
+const filteredContacts = contacts.filter(contact => {
     const matchesSearch = !searchTerm || 
-      contact.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      contact.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      contact.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (contact.company && contact.company.toLowerCase().includes(searchTerm.toLowerCase())) ||
-      (contact.tags && contact.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase())))
+      (contact.first_name_c && contact.first_name_c.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (contact.last_name_c && contact.last_name_c.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (contact.email_c && contact.email_c.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (contact.company_c && contact.company_c.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (contact.Tags && contact.Tags.toLowerCase().includes(searchTerm.toLowerCase()))
 
     const matchesFilter = filterBy === "all" || 
-      (filterBy === "active" && new Date(contact.lastActivity) >= new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)) ||
-      (filterBy === "inactive" && new Date(contact.lastActivity) < new Date(Date.now() - 30 * 24 * 60 * 60 * 1000))
+      (filterBy === "active" && new Date(contact.last_activity_c || contact.ModifiedOn) >= new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)) ||
+      (filterBy === "inactive" && new Date(contact.last_activity_c || contact.ModifiedOn) < new Date(Date.now() - 30 * 24 * 60 * 60 * 1000))
 
     return matchesSearch && matchesFilter
   })
 
-  const sortedContacts = [...filteredContacts].sort((a, b) => {
+const sortedContacts = [...filteredContacts].sort((a, b) => {
     switch (sortBy) {
       case "name":
-        return `${a.firstName} ${a.lastName}`.localeCompare(`${b.firstName} ${b.lastName}`)
+        return `${a.first_name_c} ${a.last_name_c}`.localeCompare(`${b.first_name_c} ${b.last_name_c}`)
       case "company":
-        return (a.company || "").localeCompare(b.company || "")
+        return (a.company_c || "").localeCompare(b.company_c || "")
       case "recent":
-        return new Date(b.lastActivity) - new Date(a.lastActivity)
+        return new Date(b.last_activity_c || b.ModifiedOn) - new Date(a.last_activity_c || a.ModifiedOn)
       case "oldest":
-        return new Date(a.createdAt) - new Date(b.createdAt)
+        return new Date(a.created_at_c || a.CreatedOn) - new Date(b.created_at_c || b.CreatedOn)
       default:
         return 0
     }

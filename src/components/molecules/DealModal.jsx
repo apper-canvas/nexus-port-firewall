@@ -5,25 +5,25 @@ import Button from "@/components/atoms/Button"
 import Input from "@/components/atoms/Input"
 
 const DealModal = ({ isOpen, onClose, onSave, deal = null, contacts = [], title = "Add Deal" }) => {
-  const [formData, setFormData] = useState({
-    title: "",
-    company: "",
-    contactId: "",
-    value: "",
-    expectedCloseDate: "",
-    description: ""
+const [formData, setFormData] = useState({
+    title_c: "",
+    company_c: "",
+    contact_id_c: "",
+    value_c: "",
+    expected_close_date_c: "",
+    description_c: ""
   })
   const [errors, setErrors] = useState({})
 
   useEffect(() => {
-    if (deal) {
+if (deal) {
       setFormData({
-        title: deal.title || "",
-        company: deal.company || "",
-        contactId: deal.contactId || "",
-        value: deal.value || "",
-        expectedCloseDate: deal.expectedCloseDate || "",
-        description: deal.description || ""
+        title_c: deal.title_c || "",
+        company_c: deal.company_c || "",
+        contact_id_c: deal.contact_id_c || "",
+        value_c: deal.value_c || "",
+        expected_close_date_c: deal.expected_close_date_c || "",
+        description_c: deal.description_c || ""
       })
     } else {
       setFormData({
@@ -64,13 +64,13 @@ const DealModal = ({ isOpen, onClose, onSave, deal = null, contacts = [], title 
   const handleSubmit = (e) => {
     e.preventDefault()
     if (validateForm()) {
-      const selectedContact = contacts.find(c => c.Id === parseInt(formData.contactId))
+const selectedContact = contacts.find(c => c.Id === parseInt(formData.contact_id_c))
       const dealData = {
         ...formData,
-        contactId: parseInt(formData.contactId),
-        contactName: selectedContact ? `${selectedContact.firstName} ${selectedContact.lastName}` : "",
-        value: parseFloat(formData.value),
-        probability: deal ? deal.probability : 25
+        contact_id_c: parseInt(formData.contact_id_c),
+        contact_name_c: selectedContact ? `${selectedContact.first_name_c} ${selectedContact.last_name_c}` : "",
+        value_c: parseFloat(formData.value_c),
+        probability_c: deal ? deal.probability_c : 25
       }
       onSave(dealData)
     }
@@ -90,12 +90,12 @@ const DealModal = ({ isOpen, onClose, onSave, deal = null, contacts = [], title 
   }
 
   const handleContactChange = (contactId) => {
-    const selectedContact = contacts.find(c => c.Id === parseInt(contactId))
+const selectedContact = contacts.find(c => c.Id === parseInt(contactId))
     if (selectedContact) {
       setFormData(prev => ({
         ...prev,
-        contactId: contactId,
-        company: prev.company || selectedContact.company || ""
+        contact_id_c: contactId,
+        company_c: prev.company_c || selectedContact.company_c || ""
       }))
     } else {
       setFormData(prev => ({
@@ -166,8 +166,8 @@ const DealModal = ({ isOpen, onClose, onSave, deal = null, contacts = [], title 
                   >
                     <option value="">Select a contact</option>
                     {contacts.map((contact) => (
-                      <option key={contact.Id} value={contact.Id}>
-                        {contact.firstName} {contact.lastName} - {contact.company}
+<option key={contact.Id} value={contact.Id}>
+                        {contact.first_name_c} {contact.last_name_c} - {contact.company_c}
                       </option>
                     ))}
                   </select>

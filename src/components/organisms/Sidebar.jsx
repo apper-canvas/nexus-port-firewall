@@ -1,6 +1,8 @@
-import { NavLink } from "react-router-dom"
-import ApperIcon from "@/components/ApperIcon"
-import { cn } from "@/utils/cn"
+import { NavLink } from "react-router-dom";
+import React, { useContext } from "react";
+import { cn } from "@/utils/cn";
+import ApperIcon from "@/components/ApperIcon";
+import { AuthContext } from "@/App";
 
 const Sidebar = ({ isOpen, onClose }) => {
   const navigation = [
@@ -60,16 +62,26 @@ const Sidebar = ({ isOpen, onClose }) => {
           </div>
         </nav>
         
-        <div className="p-4 border-t border-gray-200">
-          <div className="flex items-center p-3 rounded-lg bg-gradient-to-r from-gray-50 to-primary-50">
+<div className="p-4 border-t border-gray-200">
+          <div className="flex items-center p-3 rounded-lg bg-gradient-to-r from-gray-50 to-primary-50 mb-3">
             <div className="w-8 h-8 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-full flex items-center justify-center">
-              <span className="text-white text-sm font-semibold">JD</span>
+              <span className="text-white text-sm font-semibold">U</span>
             </div>
-            <div className="ml-3">
-              <p className="text-sm font-medium text-gray-900">John Doe</p>
-              <p className="text-xs text-gray-500">Sales Manager</p>
+            <div className="ml-3 flex-1">
+              <p className="text-sm font-medium text-gray-900">User</p>
+              <p className="text-xs text-gray-500">CRM User</p>
             </div>
           </div>
+<button 
+            onClick={() => {
+              const { logout } = useContext(AuthContext);
+              logout();
+            }}
+            className="w-full flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-lg hover:bg-gray-100 transition-colors"
+          >
+            <ApperIcon name="LogOut" className="mr-3 h-4 w-4" />
+            Logout
+          </button>
         </div>
       </div>
     </div>
@@ -141,16 +153,26 @@ const Sidebar = ({ isOpen, onClose }) => {
             </div>
           </nav>
           
-          <div className="p-4 border-t border-gray-200">
-            <div className="flex items-center p-3 rounded-lg bg-gradient-to-r from-gray-50 to-primary-50">
+<div className="p-4 border-t border-gray-200">
+            <div className="flex items-center p-3 rounded-lg bg-gradient-to-r from-gray-50 to-primary-50 mb-3">
               <div className="w-8 h-8 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-full flex items-center justify-center">
-                <span className="text-white text-sm font-semibold">JD</span>
+                <span className="text-white text-sm font-semibold">U</span>
               </div>
-              <div className="ml-3">
-                <p className="text-sm font-medium text-gray-900">John Doe</p>
-                <p className="text-xs text-gray-500">Sales Manager</p>
+              <div className="ml-3 flex-1">
+                <p className="text-sm font-medium text-gray-900">User</p>
+                <p className="text-xs text-gray-500">CRM User</p>
               </div>
             </div>
+<button 
+              onClick={() => {
+                const { logout } = useContext(AuthContext);
+                logout();
+              }}
+              className="w-full flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-lg hover:bg-gray-100 transition-colors"
+            >
+              <ApperIcon name="LogOut" className="mr-3 h-4 w-4" />
+              Logout
+            </button>
           </div>
         </div>
       </div>

@@ -30,27 +30,27 @@ const Dashboard = () => {
     }
   }
 
-  const getRecentActivity = () => {
+const getRecentActivity = () => {
     const recentContacts = [...contacts]
-      .sort((a, b) => new Date(b.lastActivity) - new Date(a.lastActivity))
+      .sort((a, b) => new Date(b.last_activity_c || b.ModifiedOn) - new Date(a.last_activity_c || a.ModifiedOn))
       .slice(0, 5)
     
     return recentContacts.map(contact => ({
       id: contact.Id,
       type: "Contact Updated",
-      description: `${contact.firstName} ${contact.lastName} information was updated`,
-      timestamp: contact.lastActivity,
+      description: `${contact.first_name_c} ${contact.last_name_c} information was updated`,
+      timestamp: contact.last_activity_c || contact.ModifiedOn,
       contact: contact
     }))
   }
 
-  const getActiveContacts = () => {
+const getActiveContacts = () => {
     const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)
-    return contacts.filter(contact => new Date(contact.lastActivity) >= thirtyDaysAgo).length
+    return contacts.filter(contact => new Date(contact.last_activity_c || contact.ModifiedOn) >= thirtyDaysAgo).length
   }
 
-  const getTotalCompanies = () => {
-    const companies = new Set(contacts.filter(c => c.company).map(c => c.company))
+const getTotalCompanies = () => {
+    const companies = new Set(contacts.filter(c => c.company_c).map(c => c.company_c))
     return companies.size
   }
 

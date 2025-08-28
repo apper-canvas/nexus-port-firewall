@@ -55,12 +55,12 @@ const DealCard = ({ deal, onEdit, onDelete, isDragging = false }) => {
       <div className="flex items-start justify-between mb-3">
         <div className="flex-1">
           <h4 className="font-semibold text-gray-900 text-sm leading-tight mb-1">
-            {deal.title}
+{deal.title_c}
           </h4>
-          <p className="text-xs text-gray-600 mb-2">{deal.company}</p>
+<p className="text-xs text-gray-600 mb-2">{deal.company_c}</p>
           <div className="flex items-center text-xs text-gray-500">
-            <ApperIcon name="User" className="h-3 w-3 mr-1" />
-            {deal.contactName}
+<ApperIcon name="User" className="h-3 w-3 mr-1" />
+            {deal.contact_name_c}
           </div>
         </div>
         <ApperIcon name="GripVertical" className="h-4 w-4 text-gray-400 flex-shrink-0" />
@@ -69,24 +69,24 @@ const DealCard = ({ deal, onEdit, onDelete, isDragging = false }) => {
       <div className="space-y-2 mb-3">
         <div className="flex items-center justify-between">
           <span className="text-lg font-bold text-gray-900">
-            {formatCurrency(deal.value)}
+{formatCurrency(deal.value_c)}
           </span>
-          <Badge variant={getProbabilityVariant(deal.probability)} size="sm">
-            {deal.probability}%
+<Badge variant={getProbabilityVariant(deal.probability_c)} size="sm">
+            {deal.probability_c}%
           </Badge>
         </div>
         
-        <div className="flex items-center justify-between text-xs">
+<div className="flex items-center justify-between text-xs">
           <span className="text-gray-600">Expected close:</span>
-          <Badge variant={getDaysVariant(deal.expectedCloseDate)} size="sm">
-            {getDaysToClose(deal.expectedCloseDate)}
+          <Badge variant={getDaysVariant(deal.expected_close_date_c)} size="sm">
+            {getDaysToClose(deal.expected_close_date_c)}
           </Badge>
         </div>
       </div>
 
       <div className="flex items-center justify-between pt-2 border-t border-gray-200">
-        <span className="text-xs text-gray-500">
-          {format(new Date(deal.expectedCloseDate), "MMM dd")}
+<span className="text-xs text-gray-500">
+          {format(new Date(deal.expected_close_date_c), "MMM dd")}
         </span>
         <div className="flex items-center space-x-1">
           <Button

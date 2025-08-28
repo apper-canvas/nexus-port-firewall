@@ -52,12 +52,14 @@ const Deals = () => {
     setShowModal(true)
   }
 
-  const handleDeleteDeal = async (deal) => {
-    if (confirm(`Are you sure you want to delete "${deal.title}"?`)) {
+const handleDeleteDeal = async (deal) => {
+    if (confirm(`Are you sure you want to delete "${deal.title_c}"?`)) {
       try {
-        await dealService.delete(deal.Id)
-        setDeals(prev => prev.filter(d => d.Id !== deal.Id))
-        toast.success("Deal deleted successfully")
+        const success = await dealService.delete(deal.Id)
+        if (success) {
+          setDeals(prev => prev.filter(d => d.Id !== deal.Id))
+          toast.success("Deal deleted successfully")
+        }
       } catch (error) {
         console.error("Failed to delete deal:", error)
         toast.error("Failed to delete deal")
@@ -65,16 +67,20 @@ const Deals = () => {
     }
   }
 
-  const handleSaveDeal = async (dealData) => {
+const handleSaveDeal = async (dealData) => {
     try {
       if (editingDeal) {
         const updatedDeal = await dealService.update(editingDeal.Id, dealData)
-        setDeals(prev => prev.map(d => d.Id === editingDeal.Id ? updatedDeal : d))
-        toast.success("Deal updated successfully")
+        if (updatedDeal) {
+          setDeals(prev => prev.map(d => d.Id === editingDeal.Id ? updatedDeal : d))
+          toast.success("Deal updated successfully")
+        }
       } else {
         const newDeal = await dealService.create(dealData)
-        setDeals(prev => [newDeal, ...prev])
-        toast.success("Deal created successfully")
+        if (newDeal) {
+          setDeals(prev => [newDeal, ...prev])
+          toast.success("Deal created successfully")
+        }
       }
       setShowModal(false)
       setEditingDeal(null)
@@ -84,19 +90,21 @@ const Deals = () => {
     }
   }
 
-  const handleMoveCard = async (dealId, newStatus) => {
+const handleMoveCard = async (dealId, newStatus) => {
     try {
-      const updatedDeal = await dealService.update(dealId, { status: newStatus })
-      setDeals(prev => prev.map(d => d.Id === dealId ? updatedDeal : d))
-      toast.success(`Deal moved to ${newStatus}`)
+      const updatedDeal = await dealService.update(dealId, { status_c: newStatus })
+      if (updatedDeal) {
+        setDeals(prev => prev.map(d => d.Id === dealId ? updatedDeal : d))
+        toast.success(`Deal moved to ${newStatus}`)
+      }
     } catch (error) {
       console.error("Failed to move deal:", error)
       toast.error("Failed to move deal")
     }
   }
 
-  const getTotalValue = () => {
-    return deals.reduce((sum, deal) => sum + deal.value, 0)
+const getTotalValue = () => {
+    return deals.reduce((sum, deal) => sum + (deal.value_c || 0), 0)
   }
 
   const formatCurrency = (amount) => {

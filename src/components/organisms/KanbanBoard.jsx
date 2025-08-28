@@ -46,9 +46,9 @@ const columns = [
     const stageDeals = deals.filter(deal => deal.status === stageId)
     if (stageDeals.length === 0) return { avgDays: 0, performance: 'normal', dealCount: 0 }
 
-    const stageTimes = stageDeals.map(deal => {
-      const statusDate = new Date(deal.statusUpdatedAt || deal.updatedAt)
-      const createdDate = new Date(deal.createdAt)
+const stageTimes = stageDeals.map(deal => {
+      const statusDate = new Date(deal.status_updated_at_c || deal.updated_at_c || deal.ModifiedOn)
+      const createdDate = new Date(deal.created_at_c || deal.CreatedOn)
       const diffTime = statusDate - createdDate
       return Math.max(1, Math.ceil(diffTime / (1000 * 60 * 60 * 24)))
     })
@@ -88,12 +88,12 @@ const columns = [
   }
 
   const getDealsForColumn = (status) => {
-    return deals.filter(deal => deal.status === status)
+return deals.filter(deal => deal.status_c === status)
   }
 
   const getTotalValue = (status) => {
-    const columnDeals = getDealsForColumn(status)
-    return columnDeals.reduce((sum, deal) => sum + deal.value, 0)
+const columnDeals = getDealsForColumn(status)
+    return columnDeals.reduce((sum, deal) => sum + (deal.value_c || 0), 0)
   }
 
   const formatCurrency = (amount) => {
