@@ -37,11 +37,11 @@ export const dealService = {
     await delay(400)
     const deals = initializeDeals()
     
-    const newDeal = {
+const newDeal = {
       ...dealData,
       Id: Math.max(...deals.map(d => d.Id), 0) + 1,
       status: "Lead",
-createdAt: new Date().toISOString(),
+      createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       statusUpdatedAt: new Date().toISOString()
     }
@@ -66,7 +66,7 @@ const updatedDeal = {
       ...dealData,
       Id: parseInt(id),
       updatedAt: new Date().toISOString(),
-      statusUpdatedAt: dealData.status ? new Date().toISOString() : deals[index].statusUpdatedAt || deals[index].updatedAt
+      statusUpdatedAt: dealData.status && dealData.status !== deals[index].status ? new Date().toISOString() : deals[index].statusUpdatedAt || deals[index].updatedAt
     }
     
     const updatedDeals = [...deals]
