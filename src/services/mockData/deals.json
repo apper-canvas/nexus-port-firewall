@@ -10,8 +10,9 @@
     "status": "Proposal",
     "probability": 75,
     "description": "Full enterprise CRM implementation with custom integrations and training for 500+ users.",
-    "createdAt": "2024-01-15T10:30:00Z",
-    "updatedAt": "2024-01-20T14:45:00Z"
+"createdAt": "2024-01-15T10:30:00Z",
+    "updatedAt": "2024-01-20T14:45:00Z",
+    "statusUpdatedAt": "2024-01-20T14:45:00Z"
   },
   {
     "Id": 2,
@@ -24,8 +25,9 @@
     "status": "Negotiation",
     "probability": 85,
     "description": "Cost-effective CRM solution for growing startup with 25 users.",
-    "createdAt": "2024-01-18T09:15:00Z",
-    "updatedAt": "2024-01-22T11:30:00Z"
+"createdAt": "2024-01-18T09:15:00Z",
+    "updatedAt": "2024-01-22T11:30:00Z",
+    "statusUpdatedAt": "2024-01-22T11:30:00Z"
   },
   {
     "Id": 3,
@@ -38,8 +40,9 @@
     "status": "Qualified",
     "probability": 60,
     "description": "CRM integration with existing manufacturing systems and workflow automation.",
-    "createdAt": "2024-01-10T11:00:00Z",
-    "updatedAt": "2024-01-18T10:30:00Z"
+"createdAt": "2024-01-10T11:00:00Z",
+    "updatedAt": "2024-01-18T10:30:00Z",
+    "statusUpdatedAt": "2024-01-18T10:30:00Z"
   },
   {
     "Id": 4,
@@ -52,8 +55,9 @@
     "status": "Lead",
     "probability": 25,
     "description": "HIPAA-compliant CRM system for healthcare organization with advanced security features.",
-    "createdAt": "2024-01-12T14:20:00Z",
-    "updatedAt": "2024-01-17T11:15:00Z"
+"createdAt": "2024-01-12T14:20:00Z",
+    "updatedAt": "2024-01-17T11:15:00Z",
+    "statusUpdatedAt": "2024-01-17T11:15:00Z"
   },
   {
     "Id": 5,
@@ -66,8 +70,9 @@
     "status": "Lead",
     "probability": 20,
     "description": "Comprehensive CRM solution for financial services with client portfolio management.",
-    "createdAt": "2024-01-08T13:45:00Z",
-    "updatedAt": "2024-01-16T09:00:00Z"
+"createdAt": "2024-01-08T13:45:00Z",
+    "updatedAt": "2024-01-16T09:00:00Z",
+    "statusUpdatedAt": "2024-01-16T09:00:00Z"
   },
   {
     "Id": 6,
@@ -80,8 +85,9 @@
     "status": "Closed Won",
     "probability": 100,
     "description": "Customer analytics and retention CRM tools for retail chain operations.",
-    "createdAt": "2024-01-14T10:10:00Z",
-    "updatedAt": "2024-01-25T16:20:00Z"
+"createdAt": "2024-01-14T10:10:00Z",
+    "updatedAt": "2024-01-25T16:20:00Z",
+    "statusUpdatedAt": "2024-01-25T16:20:00Z"
   },
   {
     "Id": 7,
@@ -94,8 +100,9 @@
     "status": "Qualified",
     "probability": 65,
     "description": "Mobile-first CRM solution for construction field teams and project management.",
-    "createdAt": "2024-01-16T08:30:00Z",
-    "updatedAt": "2024-01-19T12:45:00Z"
+"createdAt": "2024-01-16T08:30:00Z",
+    "updatedAt": "2024-01-19T12:45:00Z",
+    "statusUpdatedAt": "2024-01-19T12:45:00Z"
   },
   {
     "Id": 8,
@@ -108,7 +115,8 @@
     "status": "Lead",
     "probability": 30,
     "description": "Student relationship management system for educational institution.",
-    "createdAt": "2024-01-11T15:20:00Z",
-    "updatedAt": "2024-01-14T13:10:00Z"
+"createdAt": "2024-01-11T15:20:00Z",
+    "updatedAt": "2024-01-14T13:10:00Z",
+    "statusUpdatedAt": "2024-01-14T13:10:00Z"
   }
 ]

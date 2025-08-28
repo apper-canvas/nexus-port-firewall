@@ -1,4 +1,6 @@
-import dealsData from "@/services/mockData/deals.json"
+import dealsData from "@/services/mockData/deals.json";
+import React from "react";
+import Error from "@/components/ui/Error";
 
 const STORAGE_KEY = "nexus_crm_deals"
 
@@ -39,8 +41,9 @@ export const dealService = {
       ...dealData,
       Id: Math.max(...deals.map(d => d.Id), 0) + 1,
       status: "Lead",
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
+createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      statusUpdatedAt: new Date().toISOString()
     }
     
     const updatedDeals = [newDeal, ...deals]
@@ -58,11 +61,12 @@ export const dealService = {
       throw new Error("Deal not found")
     }
     
-    const updatedDeal = {
+const updatedDeal = {
       ...deals[index],
       ...dealData,
       Id: parseInt(id),
-      updatedAt: new Date().toISOString()
+      updatedAt: new Date().toISOString(),
+      statusUpdatedAt: dealData.status ? new Date().toISOString() : deals[index].statusUpdatedAt || deals[index].updatedAt
     }
     
     const updatedDeals = [...deals]

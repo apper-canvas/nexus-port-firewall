@@ -45,11 +45,12 @@ const DealCard = ({ deal, onEdit, onDelete, isDragging = false }) => {
   }
 
   return (
-    <Card 
-      className={`p-4 cursor-grab active:cursor-grabbing transition-all duration-200 ${
-        isDragging ? 'opacity-50 transform rotate-2' : 'hover:shadow-md'
+<Card 
+      className={`p-4 cursor-pointer transition-all duration-200 ${
+        isDragging ? 'opacity-50 transform rotate-2 cursor-grabbing' : 'hover:shadow-md cursor-grab'
       }`}
       variant="compact"
+      onClick={() => onEdit && onEdit(deal)}
     >
       <div className="flex items-start justify-between mb-3">
         <div className="flex-1">
