@@ -1,14 +1,8 @@
 import { toast } from "react-toastify";
 import React from "react";
+import { getApperClient } from './contactServiceHelper.js';
 
 // Initialize ApperClient
-const getApperClient = () => {
-  const { ApperClient } = window.ApperSDK;
-  return new ApperClient({
-    apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
-    apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
-  });
-};
 
 const contactService = {
 async getAll() {
@@ -69,11 +63,7 @@ const response = await apperClient.fetchRecords('contact_c', params);
         ]
       };
 
-      const { ApperClient } = window.ApperSDK;
-      const apperClient = new ApperClient({
-        apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
-        apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
-      });
+const apperClient = getApperClient();
 
       const response = await apperClient.getRecordById('contact_c', id, params);
 
@@ -109,11 +99,7 @@ const response = await apperClient.fetchRecords('contact_c', params);
         }]
       };
 
-      const { ApperClient } = window.ApperSDK;
-      const apperClient = new ApperClient({
-        apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
-        apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
-      });
+const apperClient = getApperClient();
 
       const response = await apperClient.createRecord('contact_c', params);
 
@@ -169,11 +155,7 @@ const response = await apperClient.fetchRecords('contact_c', params);
         }]
       };
 
-      const { ApperClient } = window.ApperSDK;
-      const apperClient = new ApperClient({
-        apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
-        apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
-      });
+const apperClient = getApperClient();
 
       const response = await apperClient.updateRecord('contact_c', params);
 
@@ -218,11 +200,7 @@ const response = await apperClient.fetchRecords('contact_c', params);
         RecordIds: ids.map(id => parseInt(id))
       };
 
-      const { ApperClient } = window.ApperSDK;
-      const apperClient = new ApperClient({
-        apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
-        apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
-      });
+const apperClient = getApperClient();
 
       const response = await apperClient.deleteRecord('contact_c', params);
 
