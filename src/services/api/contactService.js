@@ -32,7 +32,19 @@ const contactService = {
         pagingInfo: {"limit": 100, "offset": 0}
       }
       
-      const response = await apperClient.fetchRecords('contact_c', params)
+const { ApperClient } = window.ApperSDK;
+      const apperClient = new ApperClient({
+        apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
+        apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
+      });
+      
+      const response = await apperClient.fetchRecords('contact_c', params);
+      
+      if (!response.success) {
+        console.error(response.message);
+        toast.error(response.message);
+        return [];
+      }
       
       if (!response.success) {
         console.error(response.message)
@@ -42,10 +54,11 @@ const contactService = {
       
       return response.data || []
     } catch (error) {
-      console.error("Error fetching contacts:", error?.response?.data?.message || error)
-      return []
+console.error("Error fetching contacts:", error?.response?.data?.message || error);
+      toast.error("Failed to load contacts");
+      return [];
     }
-},
+  },
 
   async getById(id) {
     try {

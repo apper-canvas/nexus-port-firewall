@@ -50,9 +50,9 @@ const getActiveContacts = () => {
   }
 
 const getTotalCompanies = async () => {
-const companies = await companyService.getAll()
-return companies.length
-}
+    const companies = await companyService.getAll();
+    return companies.length;
+  }
 
   if (loading) {
     return (
