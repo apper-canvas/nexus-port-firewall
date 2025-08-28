@@ -30,21 +30,9 @@ const contactService = {
         ],
         orderBy: [{"fieldName": "Id", "sorttype": "DESC"}],
         pagingInfo: {"limit": 100, "offset": 0}
-      }
-      
-const { ApperClient } = window.ApperSDK;
-      const apperClient = new ApperClient({
-        apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
-        apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
-      });
+}
       
       const response = await apperClient.fetchRecords('contact_c', params);
-      
-      if (!response.success) {
-        console.error(response.message);
-        toast.error(response.message);
-        return [];
-      }
       
       if (!response.success) {
         console.error(response.message)
@@ -218,9 +206,9 @@ console.error("Error fetching contacts:", error?.response?.data?.message || erro
       }
       return true
     } catch (error) {
-      console.error("Error deleting contact:", error?.response?.data?.message || error)
+console.error("Error deleting contact:", error?.response?.data?.message || error)
       return false
-}
+    }
   }
 };
 
