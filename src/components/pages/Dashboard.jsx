@@ -7,7 +7,7 @@ import ApperIcon from "@/components/ApperIcon"
 import Badge from "@/components/atoms/Badge"
 import { format } from "date-fns"
 import { contactService } from "@/services/api/contactService"
-
+import { companyService } from "@/services/api/companyService"
 const Dashboard = () => {
   const [contacts, setContacts] = useState([])
   const [loading, setLoading] = useState(true)
@@ -49,10 +49,10 @@ const getActiveContacts = () => {
     return contacts.filter(contact => new Date(contact.last_activity_c || contact.ModifiedOn) >= thirtyDaysAgo).length
   }
 
-const getTotalCompanies = () => {
-    const companies = new Set(contacts.filter(c => c.company_c).map(c => c.company_c))
-    return companies.size
-  }
+const getTotalCompanies = async () => {
+const companies = await companyService.getAll()
+return companies.length
+}
 
   if (loading) {
     return (

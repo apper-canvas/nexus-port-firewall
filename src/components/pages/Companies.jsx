@@ -1,11 +1,124 @@
-import Header from "@/components/organisms/Header"
-import Card from "@/components/atoms/Card"
-import Badge from "@/components/atoms/Badge"
-import ApperIcon from "@/components/ApperIcon"
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import CompanyCard from "@/components/molecules/CompanyCard";
+import CompanyModal from "@/components/molecules/CompanyModal";
+import { companyService } from "@/services/api/companyService";
+import ApperIcon from "@/components/ApperIcon";
+import SearchBar from "@/components/molecules/SearchBar";
+import Button from "@/components/atoms/Button";
+import Header from "@/components/organisms/Header";
+import Empty from "@/components/ui/Empty";
+import Loading from "@/components/ui/Loading";
 
-const Companies = () => {
+function Companies() {
+  const navigate = useNavigate()
+  const [companies, setCompanies] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState("")
+  const [searchTerm, setSearchTerm] = useState("")
+  const [showModal, setShowModal] = useState(false)
+  const [editingCompany, setEditingCompany] = useState(null)
+
+  useEffect(() => {
+    loadCompanies()
+  }, [])
+
+  const loadCompanies = async () => {
+    try {
+      setLoading(true)
+      setError("")
+      const data = await companyService.getAll()
+      setCompanies(data)
+    } catch (err) {
+      setError(err.message || "Failed to load companies")
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleAddCompany = () => {
+    setEditingCompany(null)
+    setShowModal(true)
+  }
+
+  const handleEditCompany = (company) => {
+    setEditingCompany(company)
+    setShowModal(true)
+  }
+
+  const handleSaveCompany = async (companyData) => {
+    try {
+      if (editingCompany) {
+        const updatedCompany = await companyService.update(editingCompany.Id, companyData)
+        if (updatedCompany) {
+          setCompanies(prev => prev.map(c => c.Id === editingCompany.Id ? updatedCompany : c))
+          toast.success("Company updated successfully!")
+        }
+      } else {
+        const newCompany = await companyService.create(companyData)
+        if (newCompany) {
+          setCompanies(prev => [newCompany, ...prev])
+          toast.success("Company created successfully!")
+        }
+      }
+      setShowModal(false)
+      setEditingCompany(null)
+    } catch (err) {
+      toast.error(err.message || "Failed to save company")
+    }
+  }
+
+  const handleDeleteCompany = async (company) => {
+    if (window.confirm(`Are you sure you want to delete ${company.Name}?`)) {
+      try {
+        const success = await companyService.delete(company.Id)
+        if (success) {
+          setCompanies(prev => prev.filter(c => c.Id !== company.Id))
+          toast.success("Company deleted successfully!")
+        }
+      } catch (err) {
+        toast.error(err.message || "Failed to delete company")
+      }
+    }
+  }
+
+  const handleViewCompany = (company) => {
+    navigate(`/companies/${company.Id}`)
+  }
+
+  const handleSearch = (term) => {
+    setSearchTerm(term)
+  }
+
+  const filteredCompanies = companies.filter(company => {
+    if (!searchTerm) return true
+    const searchLower = searchTerm.toLowerCase()
+    return (
+      (company.Name?.toLowerCase() || '').includes(searchLower) ||
+      (company.Tags?.toLowerCase() || '').includes(searchLower)
+    )
+  })
+
+  if (error) {
+    return (
+      <div className="flex-1">
+        <Header title="Companies" />
+        <div className="flex-1 p-6">
+          <Empty
+            title="Error Loading Companies"
+            description={error}
+            action="Retry"
+            onAction={loadCompanies}
+            icon="AlertCircle"
+          />
+        </div>
+      </div>
+    )
+  }
+
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex-1">
       <Header title="Companies" />
       
       <div className="flex-1 p-6">
@@ -15,74 +128,66 @@ const Companies = () => {
               <h2 className="text-xl font-semibold text-gray-900">Company Management</h2>
               <p className="text-gray-600">Manage your business relationships and accounts</p>
             </div>
-            <Badge variant="secondary" size="lg">
-              <ApperIcon name="Clock" className="w-4 h-4 mr-1" />
-              Coming Soon
-            </Badge>
+            <Button onClick={handleAddCompany}>
+              <ApperIcon name="Plus" className="w-4 h-4 mr-2" />
+              Add Company
+            </Button>
+          </div>
+
+          <div className="flex items-center justify-between">
+            <SearchBar
+              onSearch={handleSearch}
+              placeholder="Search companies..."
+              className="max-w-md"
+            />
+            <div className="text-sm text-gray-500">
+              {filteredCompanies.length} {filteredCompanies.length === 1 ? 'company' : 'companies'}
+            </div>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
-          <Card className="p-6 text-center">
-            <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <ApperIcon name="Building2" className="h-6 w-6 text-blue-600" />
-            </div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">Company Profiles</h3>
-            <p className="text-gray-600 text-sm mb-4">Detailed company information and contact management</p>
-            <Badge variant="info">Planned</Badge>
-          </Card>
-
-          <Card className="p-6 text-center">
-            <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <ApperIcon name="Network" className="h-6 w-6 text-green-600" />
-            </div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">Relationship Mapping</h3>
-            <p className="text-gray-600 text-sm mb-4">Visual representation of business relationships</p>
-            <Badge variant="success">Planned</Badge>
-          </Card>
-
-          <Card className="p-6 text-center">
-            <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <ApperIcon name="TrendingUp" className="h-6 w-6 text-purple-600" />
-            </div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">Account Analytics</h3>
-            <p className="text-gray-600 text-sm mb-4">Track engagement and opportunity value</p>
-            <Badge variant="secondary">Planned</Badge>
-          </Card>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <Card className="p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-gray-900">Top Companies</h3>
-              <ApperIcon name="Building2" className="h-5 w-5 text-gray-400" />
-            </div>
-            <div className="text-center py-8">
-              <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <ApperIcon name="Building2" className="h-6 w-6 text-gray-500" />
-              </div>
-              <p className="text-gray-500 text-sm">No companies tracked yet</p>
-              <p className="text-gray-400 text-xs mt-1">Company insights will appear here</p>
-            </div>
-          </Card>
-
-          <Card className="p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-gray-900">Industry Distribution</h3>
-              <ApperIcon name="PieChart" className="h-5 w-5 text-gray-400" />
-            </div>
-            <div className="text-center py-8">
-              <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <ApperIcon name="PieChart" className="h-6 w-6 text-gray-500" />
-              </div>
-              <p className="text-gray-500 text-sm">Industry analysis coming soon</p>
-              <p className="text-gray-400 text-xs mt-1">Track your market segments</p>
-            </div>
-          </Card>
-        </div>
+        {loading ? (
+          <Loading type="cards" count={6} />
+        ) : filteredCompanies.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredCompanies.map((company) => (
+              <CompanyCard
+                key={company.Id}
+                company={company}
+                onView={handleViewCompany}
+                onEdit={handleEditCompany}
+                onDelete={handleDeleteCompany}
+                contactCount={0} // Will be calculated from contacts
+              />
+            ))}
+          </div>
+        ) : (
+          <Empty
+            title={searchTerm ? "No companies found" : "No companies yet"}
+            description={
+              searchTerm 
+                ? `No companies match "${searchTerm}"`
+                : "Start by adding your first company to track business relationships"
+            }
+            action="Add Company"
+            onAction={handleAddCompany}
+            icon="Building2"
+          />
+        )}
       </div>
+
+      <CompanyModal
+        isOpen={showModal}
+        onClose={() => {
+          setShowModal(false)
+          setEditingCompany(null)
+        }}
+        onSave={handleSaveCompany}
+        company={editingCompany}
+        title={editingCompany ? "Edit Company" : "Add Company"}
+      />
     </div>
-  )
+)
 }
 
 export default Companies

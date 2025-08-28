@@ -8,6 +8,7 @@ import Signup from "@/components/pages/Signup";
 import Callback from "@/components/pages/Callback";
 import ErrorPage from "@/components/pages/ErrorPage";
 import Companies from "@/components/pages/Companies";
+import CompanyDetail from "@/components/organisms/CompanyDetail";
 import Contacts from "@/components/pages/Contacts";
 import Deals from "@/components/pages/Deals";
 import Dashboard from "@/components/pages/Dashboard";
@@ -124,16 +125,17 @@ return (
           <Route path="/signup" element={<Signup />} />
           <Route path="/callback" element={<Callback />} />
           <Route path="/error" element={<ErrorPage />} />
-          <Route path="/*" element={
-            <Layout>
-              <Routes>
-                <Route path="/" element={<Dashboard />} />
-                <Route path="/contacts" element={<Contacts />} />
-                <Route path="/deals" element={<Deals />} />
-                <Route path="/companies" element={<Companies />} />
-                <Route path="/reports" element={<Reports />} />
-                <Route path="/settings" element={<Settings />} />
-              </Routes>
+<Route path="/*" element={
+<Layout>
+<Routes>
+<Route path="/" element={<Dashboard />} />
+<Route path="/contacts" element={<Contacts />} />
+<Route path="/deals" element={<Deals />} />
+<Route path="/companies" element={<Companies />} />
+<Route path="/companies/:id" element={<CompanyDetail />} />
+<Route path="/reports" element={<Reports />} />
+<Route path="/settings" element={<Settings />} />
+</Routes>
             </Layout>
           } />
         </Routes>
