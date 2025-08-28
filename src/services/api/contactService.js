@@ -1,4 +1,5 @@
-import { toast } from 'react-toastify'
+import { toast } from "react-toastify";
+import React from "react";
 
 // Initialize ApperClient
 const getApperClient = () => {
@@ -9,7 +10,7 @@ const getApperClient = () => {
   })
 }
 export const contactService = {
-  async getAll() {
+async getAll() {
     try {
       const apperClient = getApperClient()
       const params = {
@@ -45,7 +46,7 @@ export const contactService = {
     }
   },
 
-  async getById(id) {
+async getById(id) {
     try {
       const apperClient = getApperClient()
       const params = {
