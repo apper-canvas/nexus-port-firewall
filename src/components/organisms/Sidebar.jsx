@@ -5,6 +5,7 @@ import ApperIcon from "@/components/ApperIcon";
 import { AuthContext } from "@/App";
 
 const Sidebar = ({ isOpen, onClose }) => {
+  const { logout } = useContext(AuthContext);
   const navigation = [
     { name: "Dashboard", href: "/", icon: "LayoutDashboard" },
     { name: "Contacts", href: "/contacts", icon: "Users" },
@@ -14,8 +15,8 @@ const Sidebar = ({ isOpen, onClose }) => {
     { name: "Settings", href: "/settings", icon: "Settings" }
   ]
 
-  // Desktop sidebar - static positioning
-  const DesktopSidebar = () => (
+// Desktop sidebar - static positioning
+  const DesktopSidebar = ({ onLogout }) => (
     <div className="hidden lg:block w-64 bg-white border-r border-gray-200 fixed inset-y-0 left-0 z-30">
       <div className="flex flex-col h-full">
         <div className="flex items-center px-6 py-6 border-b border-gray-200">
@@ -73,10 +74,7 @@ const Sidebar = ({ isOpen, onClose }) => {
             </div>
           </div>
 <button 
-            onClick={() => {
-              const { logout } = useContext(AuthContext);
-              logout();
-            }}
+            onClick={onLogout}
             className="w-full flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-lg hover:bg-gray-100 transition-colors"
           >
             <ApperIcon name="LogOut" className="mr-3 h-4 w-4" />
@@ -87,8 +85,8 @@ const Sidebar = ({ isOpen, onClose }) => {
     </div>
   )
 
-  // Mobile sidebar - overlay with transforms
-  const MobileSidebar = () => (
+// Mobile sidebar - overlay with transforms
+  const MobileSidebar = ({ onLogout }) => (
     <div className={cn(
       "lg:hidden fixed inset-0 z-50 transition-opacity duration-300",
       isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
@@ -164,10 +162,7 @@ const Sidebar = ({ isOpen, onClose }) => {
               </div>
             </div>
 <button 
-              onClick={() => {
-                const { logout } = useContext(AuthContext);
-                logout();
-              }}
+              onClick={onLogout}
               className="w-full flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-lg hover:bg-gray-100 transition-colors"
             >
               <ApperIcon name="LogOut" className="mr-3 h-4 w-4" />
@@ -179,10 +174,10 @@ const Sidebar = ({ isOpen, onClose }) => {
     </div>
   )
 
-  return (
+return (
     <>
-      <DesktopSidebar />
-      <MobileSidebar />
+      <DesktopSidebar onLogout={logout} />
+      <MobileSidebar onLogout={logout} />
     </>
   )
 }
