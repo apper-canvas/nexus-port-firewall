@@ -239,5 +239,3 @@ const apperClient = getApperClient();
 };
 
 export { contactService };
-
-export { contactService };
